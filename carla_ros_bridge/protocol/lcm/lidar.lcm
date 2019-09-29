@@ -1,0 +1,7 @@
+package lcmPointCloud;
+
+struct LcmPointCloud
+{
+int64_t numPtdCld;
+float ptdCld[numPtdCld][3];
+}
