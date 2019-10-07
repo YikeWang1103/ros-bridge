@@ -100,5 +100,6 @@ class Lidar(Sensor):
         pointCloud.ptdCld = lidar_data
         pointCloud.numPtdCld = lidar_data.shape[0]
 
-        print("lidar data row = %d, column = %d" %(lidar_data.shape[0],lidar_data.shape[1]))
+        # print("lidar data row = %d, column = %d" %(lidar_data.shape[0],lidar_data.shape[1]))
+        # print(header.frame_id)
         self.lc.publish("POINT_CLOUD",pointCloud.encode())
