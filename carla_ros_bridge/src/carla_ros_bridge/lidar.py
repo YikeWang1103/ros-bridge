@@ -19,6 +19,10 @@ from sensor_msgs.point_cloud2 import create_cloud_xyz32
 from carla_ros_bridge.sensor import Sensor
 import carla_ros_bridge.transforms as trans
 
+import lcm
+import sys
+sys.path.insert(0,'/home/yike/Workspace/ros-bridge/carla_ros_bridge/protocol/lcm')
+from lcmPointCloud import LcmPointCloud
 
 class Lidar(Sensor):
 
@@ -42,6 +46,7 @@ class Lidar(Sensor):
                                     communication=communication,
                                     synchronous_mode=synchronous_mode,
                                     prefix='lidar/' + carla_actor.attributes.get('role_name'))
+        self.lc = lcm.LCM()
 
     def get_ros_sensor_transform(self, transform):
         """
@@ -90,3 +95,10 @@ class Lidar(Sensor):
         point_cloud_msg = create_cloud_xyz32(header, lidar_data)
         self.publish_message(
             self.get_topic_prefix() + "/point_cloud", point_cloud_msg)
+
+        pointCloud = LcmPointCloud()
+        pointCloud.ptdCld = lidar_data
+        pointCloud.numPtdCld = lidar_data.shape[0]
+
+        print("lidar data row = %d, column = %d" %(lidar_data.shape[0],lidar_data.shape[1]))
+        self.lc.publish("POINT_CLOUD",pointCloud.encode())
